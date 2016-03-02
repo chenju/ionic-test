@@ -4,6 +4,15 @@
 node_modules/
 platforms/
 plugins/
+<<<<<<< HEAD
 hooks/
 scss/
 www/lib/
+=======
+.gradle/
+hooks/
+resources/
+scss/
+www/lib/
+
+>>>>>>> 861bdbcbea9f36825106318a615bd343fac5cb94

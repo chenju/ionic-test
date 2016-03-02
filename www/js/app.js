@@ -8,6 +8,7 @@
 
 
 
+
 angular.module('starter', ['ionic', 'starter.services'])
     .constant('$ionicLoadingConfig', {
         template: 'Default Loading Template...'
@@ -170,3 +171,4 @@ angular.module('starter', ['ionic', 'starter.services'])
     })
     .controller('SndDrinkPageController', function($scope, $ionicSideMenuDelegate) {})
     .controller('SndPolicyPageController', function($scope, $ionicSideMenuDelegate) {})
+
