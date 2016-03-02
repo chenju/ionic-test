@@ -1,0 +1,51 @@
+<ion-view view-title="Account">
+  
+  <ion-side-menus>
+    
+      <ion-side-menu-content drag-content="true" edge-drag-threshold="false">
+        <ion-header-bar class="bar-positive">
+          <button class="button button-icon ion-navicon" ng-click="toggleLeft()" ng-hide="$exposeAside.active"></button>
+          <h1 class="title">Content</h1>
+
+        </ion-header-bar>
+
+
+        <ion-content class="padding" scroll="true" on-drag-right='toggle()' on-scroll-complete='toggle1()'>
+          <p>
+            On a small viewport (less than 768px window width), the left menu will be hidden, but can be shown by swiping left to right, or toggling the button in the top left of the header. On a large viewport (greater than or equal to 768px), the left menu will stay open.
+          </p>
+          <p>
+            Using <code>large</code> as the attribute's value is an alias to <code>(min-width:768px)</code> since it is the most common use-case. However, for added flexibility, any valid media query could be added as the value, such as <code>(min-width:600px)</code> or even multiple queries such as <code>(min-width:750px) and (max-width:1200px)</code>.
+          </p>
+          <button ng-click="toggleLeft()">
+        Toggle Left Side Menu
+      </button>
+        </ion-content>
+      </ion-side-menu-content drag-content="false">
+    
+      <ion-side-menu side="left">
+        <ion-header-bar class="bar-royal">
+          <h1 class="title">Left Menu</h1>
+        </ion-header-bar>
+        <ion-content drag-content="false">
+
+
+          <div class="list">
+            <div class="item">
+              A few
+            </div>
+            <div class="item">
+              of my
+            </div>
+            <div class="item">
+              favorite
+            </div>
+            <div class="item">
+              things
+            </div>
+          </div>
+        </ion-content>
+      </ion-side-menu>
+      
+    </ion-side-menus>
+</ion-view>
