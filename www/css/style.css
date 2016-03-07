@@ -8,6 +8,8 @@
 	background-color: transparent;
 	z-index: 2;
 	pointer-events:none;
+	opacity: 0
+	
 }
 
 .navlayer .btn{
@@ -27,6 +29,7 @@
 	line-height: 50px;
 	font-size:30px;
 	text-align: center;
+	opacity: 1;
 }
 
 .navlayer .btn1{
@@ -73,16 +76,21 @@
 
 }
 
-.navlayer.ng-hide {
-  
-  opacity:0;
 
-}
 
 .navlayer.ng-hide-remove,
 .navlayer.ng-hide-add {
   display: block !important;
   transition: all linear 300ms;
+  
+}
+
+.navlayer.ng-hide {
+  
+  opacity:1;
+  display: block !important;
+
+
 }
 
 .slider {
