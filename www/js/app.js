@@ -94,10 +94,24 @@ angular.module('starter', ['ionic', 'starter.services'])
 
     });*/
 
-.config(['$stateProvider', '$urlRouterProvider','$ionicConfigProvider', function($stateProvider, $urlRouterProvider,$ionicConfigProvider) {
+.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
         //$ionicConfigProvider.views.transition('none');
         $stateProvider
+            .state('intro', {
+                url: '/intro',
+                templateUrl: 'intro.html',
+                controller: 'RootPageController'
+            })
+            .state('intro.home', {
+                url: '/home',
+                views: {
+                    'intro': {
+                        templateUrl: 'introHome.html',
+                        controller: 'IntroCtrl'
+                    }
+                }
+            })
             .state('snd', {
                 url: '/snd',
                 templateUrl: 'snd-abstract.html',
@@ -150,13 +164,91 @@ angular.module('starter', ['ionic', 'starter.services'])
                 }
             })
 
-        $urlRouterProvider.otherwise('/snd/home');
+        $urlRouterProvider.otherwise('/');
     }])
     .controller('RootPageController', function($scope, $ionicSideMenuDelegate) {})
+    .controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate) {
+
+
+        $scope.data = {
+            numViewableSlides: 0,
+            slideIndex: 0,
+            initialInstruction: true,
+            secondInstruction: false,
+            slides: [{
+                    'template': 'firstSlide.html',
+                    'viewable': true
+                },
+
+                {
+                    'template': 'bonusSlide.html',
+                    'viewable': false
+                },
+
+                {
+                    'template': 'secondSlide.html',
+                    'viewable': true
+                },
+
+                {
+                    'template': 'thirdSlide.html',
+                    'viewable': true
+                }
+            ]
+        };
+
+        var countSlides = function() {
+            $scope.data.numViewableSlides = 0;
+
+            _.forEach($scope.data.slides, function(slide) {
+                if (slide.viewable === true) $scope.data.numViewableSlides++;
+            })
+
+            console.log($scope.data.numViewableSlides + " viewable slides");
+
+        }
+
+        countSlides();
+        console.log("fuck"+$scope.data)
+
+        // Called to navigate to the main app
+        $scope.startApp = function() {
+            $state.go('main');
+        };
+        $scope.next = function() {
+            $ionicSlideBoxDelegate.next();
+        };
+        $scope.previous = function() {
+            $ionicSlideBoxDelegate.previous();
+        };
+
+        $scope.showBonus = function() {
+            var index = _.findIndex($scope.data.slides, {
+                template: 'bonusSlide.html'
+            });
+            $scope.data.slides[index].viewable = true;
+            countSlides();
+            $scope.data.initialInstruction = false
+            $scope.data.secondInstruction = true;
+
+            $ionicSlideBoxDelegate.update();
+        };
+
+        // Called each time the slide changes
+        $scope.slideChanged = function(index) {
+
+            $scope.data.slideIndex = index;
+        };
+
+
+
+    })
 
 .controller('NavController', function($scope, $ionicSideMenuDelegate) {
         $scope.toggleLeft = function() {
             $ionicSideMenuDelegate.toggleLeft();
+            $ionicSideMenuDelegate.canDragContent(true)
+
         };
     })
     .controller('FstController', function($scope, $ionicSideMenuDelegate) {})
@@ -166,9 +258,36 @@ angular.module('starter', ['ionic', 'starter.services'])
 
 .controller('SndController', function($scope, $ionicSideMenuDelegate) {})
     .controller('SndHomePageController', function($scope, $ionicSideMenuDelegate) {})
-    .controller('SndChatPageController', function($scope, $ionicSideMenuDelegate) {})
-    .controller('SndChatSinglePageController', function($scope, $ionicSideMenuDelegate,$rootScope) {
-    })
-    .controller('SndDrinkPageController', function($scope, $ionicSideMenuDelegate) {})
-    .controller('SndPolicyPageController', function($scope, $ionicSideMenuDelegate) {})
+    .controller('SndChatPageController', function($scope, $ionicSideMenuDelegate) {
+        $ionicSideMenuDelegate.canDragContent(true)
 
+    })
+    .controller('SndChatSinglePageController', function($scope, $ionicSideMenuDelegate, $rootScope) {
+
+        $scope.navfloat = false
+        $scope.$on('$ionicView.enter', function() {
+            $ionicSideMenuDelegate.canDragContent(false);
+        });
+        $scope.$on('$ionicView.leave', function() {
+            $ionicSideMenuDelegate.canDragContent(true);
+        });
+
+        $scope.onSwipeRight = function() {
+
+            console.log('aaa')
+        }
+
+        $scope.shownav = function() {
+            if (!$scope.navfloat) {
+                $scope.navfloat = true
+            } else {
+                $scope.navfloat = false
+            }
+
+
+        }
+    })
+    .controller('SndDrinkPageController', function($scope, $ionicSideMenuDelegate) {
+        $ionicSideMenuDelegate.canDragContent(true)
+    })
+    .controller('SndPolicyPageController', function($scope, $ionicSideMenuDelegate) {})
