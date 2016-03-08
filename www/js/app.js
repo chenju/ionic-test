@@ -258,8 +258,9 @@ angular.module('starter', ['ionic', 'starter.services'])
 
 .controller('SndController', function($scope, $ionicSideMenuDelegate) {})
     .controller('SndHomePageController', function($scope, $ionicSideMenuDelegate) {})
-    .controller('SndChatPageController', function($scope, $ionicSideMenuDelegate) {
-        //$ionicSideMenuDelegate.canDragContent(true)
+    .controller('SndChatPageController', function($scope, $ionicSideMenuDelegate,Chats) {
+
+        $scope.chats=Chats.all()
 
     })
     .controller('SndChatSinglePageController', function($scope, $ionicSideMenuDelegate, $rootScope) {
