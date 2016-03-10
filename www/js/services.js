@@ -1,6 +1,6 @@
 angular.module('starter.services', [])
 
-.factory('Chats', function() {
+.factory('Chats', function($http) {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
@@ -30,6 +30,16 @@ angular.module('starter.services', [])
     lastText: 'This is wicked good ice cream.',
     face: 'img/mike.png'
   }];
+
+  $http.get("rss_newsattitude.xml", {
+        transformResponse: function(cnv) {
+            var x2js = new X2JS();
+            var aftCnv = x2js.xml_str2json(cnv);
+            return aftCnv;
+        }
+    }).success(function(response) {
+        console.log(response);
+  });
 
   return {
     all: function() {
