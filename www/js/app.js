@@ -116,7 +116,12 @@ angular.module('starter', ['ionic', 'starter.services'])
                 url: '/snd',
                 templateUrl: 'snd-abstract.html',
                 abstract: true,
-                controller: 'SndController'
+                controller: 'SndController',
+                resolve: {
+                    issuePosts: ['IssuePostService', function(IssuePostService) {
+                        return IssuePostService.fetchIssuePosts();
+                    }]
+                }
             })
             .state('snd.home', {
                 url: '/home',
@@ -209,7 +214,7 @@ angular.module('starter', ['ionic', 'starter.services'])
         }
 
         countSlides();
-        console.log("fuck"+$scope.data)
+        console.log("fuck" + $scope.data)
 
         // Called to navigate to the main app
         $scope.startApp = function() {
@@ -256,11 +261,18 @@ angular.module('starter', ['ionic', 'starter.services'])
     .controller('FstFirstPageController', function($scope, $ionicSideMenuDelegate) {})
     .controller('FstSecondPageController', function($scope, $ionicSideMenuDelegate) {})
 
-.controller('SndController', function($scope, $ionicSideMenuDelegate) {})
-    .controller('SndHomePageController', function($scope, $ionicSideMenuDelegate) {})
-    .controller('SndChatPageController', function($scope, $ionicSideMenuDelegate,Chats) {
+.controller('SndController', function($scope, $ionicSideMenuDelegate,IssuePostService) {
+          console.log(IssuePostService.issuePosts)
 
-        $scope.chats=Chats.all()
+})
+    .controller('SndHomePageController', function($scope, $ionicSideMenuDelegate) {})
+    .controller('SndChatPageController', function($scope, $ionicSideMenuDelegate, IssuePostService) {
+
+        IssuePostService.fetchIssuePosts().then(function(data){
+            $scope.chats = data.rss.channel.item
+            console.log($scope.chats)
+        })    
+        
 
     })
     .controller('SndChatSinglePageController', function($scope, $ionicSideMenuDelegate, $rootScope) {
@@ -278,7 +290,7 @@ angular.module('starter', ['ionic', 'starter.services'])
         });
 
         $scope.onSwipeRight = function() {
-     
+
             console.log('aaa')
         }
 
@@ -297,18 +309,18 @@ angular.module('starter', ['ionic', 'starter.services'])
     })
     .controller('SndPolicyPageController', function($scope, $ionicSideMenuDelegate) {})
     .directive('dragBack', function($ionicGesture, $state) {
-  return {
-    restrict : 'A',
-    link : function(scope, elem, attr) {
-      
-      $ionicGesture.on('swipe', function(event) {
-      
-        console.log('Got swiped!');
-        event.preventDefault();
-        window.history.back();
-        
-      }, elem);
-      
-    }
-  }  
-})
+        return {
+            restrict: 'A',
+            link: function(scope, elem, attr) {
+
+                $ionicGesture.on('swipe', function(event) {
+
+                    console.log('Got swiped!');
+                    event.preventDefault();
+                    window.history.back();
+
+                }, elem);
+
+            }
+        }
+    })
