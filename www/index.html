@@ -18,7 +18,6 @@
     <script src="cordova.js"></script>
     <script src="//cdn.bootcss.com/lodash.js/4.6.1/lodash.js"></script>
     <script src="lib/xml2json.min.js"></script>
-
     <!-- your app's js -->
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
@@ -59,26 +58,22 @@
     </script>
     <script id="introHome.html" type="text/ng-template">
         <ion-view title="Dynamic Slides">
-        <ion-nav-buttons side="left">
-          <button class="button button-positive button-clear no-animation"
-                  ng-click="previous()" ng-if="data.slideIndex > 0">
-            Previous Slide
-          </button>
-        </ion-nav-buttons>
-        <ion-nav-buttons side="right"> 
-          <button class="button button-positive button-clear no-animation"
-                  ng-click="next()" ng-if="data.slideIndex < data.numViewableSlides - 1">
-            Next
-          </button>
-        </ion-nav-buttons>
-        <ion-slide-box on-slide-changed="slideChanged(index)">
-
-          <ion-slide ng-repeat="slide in data.slides | filter:{viewable : true}">
-            <div ng-include src="slide.template"></div>
-          </ion-slide>
-          
-        </ion-slide-box>
-      </ion-view>
+            <ion-nav-buttons side="left">
+                <button class="button button-positive button-clear no-animation" ng-click="previous()" ng-if="data.slideIndex > 0">
+                    Previous Slide
+                </button>
+            </ion-nav-buttons>
+            <ion-nav-buttons side="right">
+                <button class="button button-positive button-clear no-animation" ng-click="next()" ng-if="data.slideIndex < data.numViewableSlides - 1">
+                    Next
+                </button>
+            </ion-nav-buttons>
+            <ion-slide-box on-slide-changed="slideChanged(index)">
+                <ion-slide ng-repeat="slide in data.slides | filter:{viewable : true}">
+                    <div ng-include src="slide.template"></div>
+                </ion-slide>
+            </ion-slide-box>
+        </ion-view>
     </script>
     <script id="intro.html" type="text/ng-template">
         <ion-side-menus enable-menu-with-back-views='true'>
@@ -174,25 +169,17 @@
                 <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
             </ion-nav-buttons>
             <ion-content has-header="true" padding="true">
+                <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
+                </ion-refresher>
                 <div class="list">
-                    <a class="item item-avatar" href="#/snd/chat-single" nav-transition="ios" ng-repeat="item in chats">
-                        <img ng-src="{{item.face}}"/>
+                    <a class="item item-avatar" href="#/snd/chat-single" nav-transition="ios" ng-repeat="item in posts">
+                        <img ng-src="{{item.face}}" />
                         <h2>{{item.title}}</h2>
                         <p>{{item.pubDate}}</p>
                     </a>
                 </div>
+                <ion-infinite-scroll ng-if="hasmore" on-infinite="loadMore()" distance="5%"></ion-infinite-scroll>
             </ion-content>
-            <div class="tabs tabs-icon-only">
-                <a nav-clear class="tab-item disable-user-behavior" title="Home" nav-clear ui-sref="snd.home" nav-transition="slide-left-right">
-                    <i class="icon ion-home"></i><span class="tab-title ng-binding" ng-bind-html="title"></span>
-                </a>
-                <a nav-clear class="tab-item disable-user-behavior active" title="Chat" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ui-sref="snd.chat">
-                    <i class="icon ion-chatbubbles"></i><span class="tab-title ng-binding" ng-bind-html="title"></span>
-                </a>
-                <a nav-clear class="tab-item disable-user-behavior" title="Drink" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ui-sref="snd.drink">
-                    <i class="icon ion-wineglass"></i><span class="tab-title ng-binding" ng-bind-html="title"></span>
-                </a>
-            </div>
         </ion-view>
     </script>
     <script id="snd-chat-single.html" type="text/ng-template">
@@ -242,7 +229,6 @@
                     <i class="ion-android-send"></i>
                 </a>
             </div>
-
         </ion-view>
     </script>
     <script id="snd-drink.html" type="text/ng-template">

@@ -1,53 +1,45 @@
 angular.module('starter.services', [])
 
-.factory('IssuePostService', function($http,$q) {
+.factory('IssuePostService', function($http, $q) {
     // Might use a resource here that returns a JSON array
-
-    // Some fake testing data
-    var chats = [{
-        id: 0,
-        name: 'Ben Sparrow',
-        lastText: 'You on your way?',
-        face: 'img/ben.png'
-    }, {
-        id: 1,
-        name: 'Max Lynx',
-        lastText: 'Hey, it\'s me',
-        face: 'img/max.png'
-    }, {
-        id: 2,
-        name: 'Adam Bradleyson',
-        lastText: 'I should buy a boat',
-        face: 'img/adam.jpg'
-    }, {
-        id: 3,
-        name: 'Perry Governor',
-        lastText: 'Look at my mukluks!',
-        face: 'img/perry.png'
-    }, {
-        id: 4,
-        name: 'Mike Harrington',
-        lastText: 'This is wicked good ice cream.',
-        face: 'img/mike.png'
-    }];
-
-    
+    var issuePosts = {};
+    //var restUrl = 'http://lumen.app/issues';
+    var restUrl = 'http://lumen.app/posts';
     return {
-        issuePosts: {},
-        fetchIssuePosts: function() {
+
+        fetchIssuePosts: function(pageId) {
             var self = this;
             var deferred = $q.defer();
-            $http.get("http://www.36kr.com/feed", {
-                transformResponse: function(cnv) {
-                    var x2js = new X2JS();
-                    var aftCnv = x2js.xml_str2json(cnv);
-                    //return aftCnv;
-                    deferred.resolve(aftCnv);
+            var run=false
+
+            var req = {
+                method: 'GET',
+                url: restUrl+ '/' + pageId,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                 }
-            }).success(function(response) {
-                return response
-            });
+            };
+            if(!run){
+            $http(req).success(function(response) {
+                run=false
+                return deferred.resolve(response)
+            }).error(
+                function(data) {
+                    console.log(data)
+                    return deferred.resolve('404')
+                }
+            )
+          }
             return deferred.promise
+
+
+
+            /*transformResponse: function(cnv) {
+                var x2js = new X2JS();
+                var aftCnv = x2js.xml_str2json(cnv);
+                //return aftCnv;
+                deferred.resolve(aftCnv);
+            }*/
         },
         remove: function(chat) {
             chats.splice(chats.indexOf(chat), 1);

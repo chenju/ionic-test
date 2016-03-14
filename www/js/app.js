@@ -116,12 +116,12 @@ angular.module('starter', ['ionic', 'starter.services'])
                 url: '/snd',
                 templateUrl: 'snd-abstract.html',
                 abstract: true,
-                controller: 'SndController',
+                controller: 'SndController'/*,
                 resolve: {
                     issuePosts: ['IssuePostService', function(IssuePostService) {
-                        return IssuePostService.fetchIssuePosts();
+                        return IssuePostService.fetchIssuePosts(1);
                     }]
-                }
+                }*/
             })
             .state('snd.home', {
                 url: '/home',
@@ -261,19 +261,68 @@ angular.module('starter', ['ionic', 'starter.services'])
     .controller('FstFirstPageController', function($scope, $ionicSideMenuDelegate) {})
     .controller('FstSecondPageController', function($scope, $ionicSideMenuDelegate) {})
 
-.controller('SndController', function($scope, $ionicSideMenuDelegate,IssuePostService) {
-          console.log(IssuePostService.issuePosts)
+.controller('SndController', function($scope, $ionicSideMenuDelegate, IssuePostService) {
+        //console.log(IssuePostService.issuePosts)
 
-})
+    })
     .controller('SndHomePageController', function($scope, $ionicSideMenuDelegate) {})
     .controller('SndChatPageController', function($scope, $ionicSideMenuDelegate, IssuePostService) {
 
-        IssuePostService.fetchIssuePosts().then(function(data){
-            $scope.chats = data.rss.channel.item
-            console.log($scope.chats)
-        })    
-        
 
+        $scope.hasmore = true;
+        var currentPage=1
+
+        IssuePostService.fetchIssuePosts(1).then(function(data) {
+
+            if (data != '404') {
+                
+                $scope.posts = data
+                run=false
+
+            } else {
+                console.log(data)
+            }
+
+        })
+
+        $scope.doRefresh = function() {
+    
+            IssuePostService.fetchIssuePosts(1).then(function(data) {
+                    $scope.posts = data
+                    run=false
+                    console.log(run)
+                })
+                .finally(function() {
+                    // Stop the ion-refresher from spinning
+                    $scope.$broadcast('scroll.refreshComplete');
+                });  
+        };
+
+        $scope.loadMore = function() {
+            var old = $scope.posts;
+            if (old != undefined) {
+                var next=currentPage+1;
+                IssuePostService.fetchIssuePosts(next).then(function(data) {
+                        run=false
+                        $scope.posts = $scope.posts.concat(data);
+                        if (data == null || data.length == 0) {
+                            console.log("结束");
+                            $scope.hasmore = false;
+                        } else {
+                            currentPage+=1
+                        }
+                        run=false
+                        console.log(run)
+
+                    })
+                    .finally(function() {
+                        // Stop the ion-refresher from spinning
+                        $scope.$broadcast('scroll.refreshComplete');
+                    });
+
+            }
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+        };
     })
     .controller('SndChatSinglePageController', function($scope, $ionicSideMenuDelegate, $rootScope) {
 
