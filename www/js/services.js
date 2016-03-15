@@ -4,7 +4,7 @@ angular.module('starter.services', [])
     // Might use a resource here that returns a JSON array
     var issuePosts = {};
     //var restUrl = 'http://lumen.app/issues';
-    var restUrl = 'rss_api.php/posts';
+    var restUrl = 'rss_api/posts';
     return {
 
         getPosts:function(){

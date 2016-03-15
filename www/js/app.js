@@ -116,12 +116,13 @@ angular.module('starter', ['ionic', 'starter.services'])
                 url: '/snd',
                 templateUrl: 'snd-abstract.html',
                 abstract: true,
-                controller: 'SndController'/*,
-                resolve: {
-                    issuePosts: ['IssuePostService', function(IssuePostService) {
-                        return IssuePostService.fetchIssuePosts(1);
-                    }]
-                }*/
+                controller: 'SndController'
+                    /*,
+                                    resolve: {
+                                        issuePosts: ['IssuePostService', function(IssuePostService) {
+                                            return IssuePostService.fetchIssuePosts(1);
+                                        }]
+                                    }*/
             })
             .state('snd.home', {
                 url: '/home',
@@ -266,11 +267,11 @@ angular.module('starter', ['ionic', 'starter.services'])
 
     })
     .controller('SndHomePageController', function($scope, $ionicSideMenuDelegate) {})
-    .controller('SndChatPageController', function($scope, $ionicSideMenuDelegate, IssuePostService,$state) {
+    .controller('SndChatPageController', function($scope, $ionicSideMenuDelegate, IssuePostService, $state) {
 
 
         $scope.hasmore = true;
-        var currentPage=1
+        var currentPage = 1
 
 
         /*IssuePostService.fetchIssuePosts(1).then(function(data) {
@@ -288,47 +289,49 @@ angular.module('starter', ['ionic', 'starter.services'])
 
         })*/
 
-        $scope.view=function(n){
-                
-                $state.go("snd.chat-single",{postId:n});
-                
-            }
+        $scope.view = function(n) {
+
+            $state.go("snd.chat-single", {
+                postId: n
+            });
+
+        }
 
         $scope.doRefresh = function() {
-    
+
             IssuePostService.fetchIssuePosts(1).then(function(data) {
                     $scope.posts = data
                     IssuePostService.setPosts(data)
-                    run=false
-                    
+                    run = false
+
                 })
                 .finally(function() {
                     // Stop the ion-refresher from spinning
                     $scope.$broadcast('scroll.refreshComplete');
-                });  
+                });
         };
 
         $scope.loadMore = function() {
             var old = $scope.posts;
             if (old != undefined) {
-                var next=currentPage+1;
+                var next = currentPage + 1;
                 IssuePostService.fetchIssuePosts(next).then(function(data) {
-                        run=false
+                        run = false
                         $scope.posts = $scope.posts.concat(data);
                         IssuePostService.setPosts($scope.posts)
                         if (data == null || data.length == 0) {
                             console.log("结束");
                             $scope.hasmore = false;
                         } else {
-                            currentPage+=1
+                            currentPage += 1
                         }
-                        run=false
-                        
+                        run = false
+
 
                     })
                     .finally(function() {
                         // Stop the ion-refresher from spinning
-                        $scope.$broadcast('scroll.refreshComplete');
+                        //$scope.$broadcast('scroll.refreshComplete');
                     });
 
             }
@@ -337,52 +340,83 @@ angular.module('starter', ['ionic', 'starter.services'])
 
         $scope.doRefresh()
     })
-    .controller('SndChatSinglePageController', function($scope, $ionicSideMenuDelegate, $rootScope,$stateParams,IssuePostService) {
+    .controller('SndChatSinglePageController', function($scope, $ionicSideMenuDelegate, $rootScope, $stateParams, IssuePostService, $sce) {
 
-        $scope.navfloat = true
-        $scope.post= IssuePostService.getPosts()[$stateParams.postId]
-        $scope.$on('$ionicView.enter', function() {
-            $ionicSideMenuDelegate.canDragContent(false);
-        });
-        $scope.$on('$ionicView.leave', function() {
-            $ionicSideMenuDelegate.canDragContent(true);
-            //$scope.navfloat = true
-            //console.log($scope.navfloat)
+            $scope.navfloat = true
+            $scope.hasmore = true;
+            $scope.posts=[];
+            $scope.posts.push(IssuePostService.getPosts()[$stateParams.postId])
+            var currentId = parseInt($stateParams.postId)
 
-        });
+            $scope.loadMore = function() {
+            
+                var old = $scope.posts;
+                if (old != undefined) {
+                    var n=parseInt(currentId)+ 1
+                    var data = IssuePostService.getPosts()[n];
+                        if (data == null || data.length == 0) {
+                            $scope.hasmore = false;
+                            console.log("结束");
+                        } else {
+                            console.log($scope.posts);
+                            $scope.posts.push(data);
+                            currentId += 1
+                        }
+                    }
+                $scope.$broadcast('scroll.infiniteScrollComplete');    
 
-        $scope.onSwipeRight = function() {
+                }
 
-            console.log('aaa')
-        }
+                //$scope.post.description = $sce.trustAsHtml($scope.post.description)
 
-        $scope.shownav = function() {
-            if (!$scope.navfloat) {
-                $scope.navfloat = true
-            } else {
-                $scope.navfloat = false
+                $scope.$on('$ionicView.enter', function() {
+                    $ionicSideMenuDelegate.canDragContent(false);
+                });
+                $scope.$on('$ionicView.leave', function() {
+                    $ionicSideMenuDelegate.canDragContent(true);
+                    //$scope.navfloat = true
+                    //console.log($scope.navfloat)
+
+                });
+
+                $scope.onSwipeRight = function() {
+
+                    console.log('aaa')
+                }
+
+                $scope.shownav = function() {
+                    if (!$scope.navfloat) {
+                        $scope.navfloat = true
+                    } else {
+                        $scope.navfloat = false
+                    }
+
+
+                }
+            })
+        .controller('SndDrinkPageController', function($scope, $ionicSideMenuDelegate) {
+            $ionicSideMenuDelegate.canDragContent(true)
+        })
+        .controller('SndPolicyPageController', function($scope, $ionicSideMenuDelegate) {})
+        .directive('dragBack', function($ionicGesture, $state) {
+            return {
+                restrict: 'A',
+                link: function(scope, elem, attr) {
+
+                    $ionicGesture.on('swiperight', function(event) {
+
+                        console.log('Got swiped!');
+                        event.preventDefault();
+                        window.history.back();
+
+                    }, elem);
+
+                }
             }
+        })
 
-
-        }
-    })
-    .controller('SndDrinkPageController', function($scope, $ionicSideMenuDelegate) {
-        $ionicSideMenuDelegate.canDragContent(true)
-    })
-    .controller('SndPolicyPageController', function($scope, $ionicSideMenuDelegate) {})
-    .directive('dragBack', function($ionicGesture, $state) {
-        return {
-            restrict: 'A',
-            link: function(scope, elem, attr) {
-
-                $ionicGesture.on('swiperight', function(event) {
-
-                    console.log('Got swiped!');
-                    event.preventDefault();
-                    window.history.back();
-
-                }, elem);
-
-            }
-        }
-    })
+        .filter('to_trusted', ['$sce', function($sce) {
+            return function(text) {
+                return $sce.trustAsHtml(text);
+            };
+        }]);
