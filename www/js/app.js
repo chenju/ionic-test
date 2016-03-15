@@ -300,7 +300,7 @@ angular.module('starter', ['ionic', 'starter.services'])
                     $scope.posts = data
                     IssuePostService.setPosts(data)
                     run=false
-                    console.log(run)
+                    
                 })
                 .finally(function() {
                     // Stop the ion-refresher from spinning
@@ -323,7 +323,7 @@ angular.module('starter', ['ionic', 'starter.services'])
                             currentPage+=1
                         }
                         run=false
-                        console.log(run)
+                        
 
                     })
                     .finally(function() {
@@ -340,7 +340,6 @@ angular.module('starter', ['ionic', 'starter.services'])
     .controller('SndChatSinglePageController', function($scope, $ionicSideMenuDelegate, $rootScope,$stateParams,IssuePostService) {
 
         $scope.navfloat = true
-         console.log(IssuePostService.getPosts())
         $scope.post= IssuePostService.getPosts()[$stateParams.postId]
         $scope.$on('$ionicView.enter', function() {
             $ionicSideMenuDelegate.canDragContent(false);
@@ -376,7 +375,7 @@ angular.module('starter', ['ionic', 'starter.services'])
             restrict: 'A',
             link: function(scope, elem, attr) {
 
-                $ionicGesture.on('swipe', function(event) {
+                $ionicGesture.on('swiperight', function(event) {
 
                     console.log('Got swiped!');
                     event.preventDefault();
