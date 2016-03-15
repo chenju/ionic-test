@@ -23,4 +23,27 @@ function xml2array($xmlObject, $out = array())
 }
 
 $array = json_decode(json_encode((array) $xml_array), true);
-echo json_encode($array);
+//echo json_encode($array);
+print XmlToJson::Parse('http://www.36kr.com/feed');
+
+class XmlToJson
+{
+
+    public function Parse($url)
+    {
+
+        $fileContents = file_get_contents($url);
+
+        $fileContents = str_replace(array("\n", "\r", "\t"), '', $fileContents);
+
+        $fileContents = trim(str_replace('"', "'", $fileContents));
+
+        $simpleXml = simplexml_load_string($fileContents);
+
+        $json = json_encode($simpleXml);
+
+        return $json;
+
+    }
+
+}

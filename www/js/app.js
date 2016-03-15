@@ -142,7 +142,7 @@ angular.module('starter', ['ionic', 'starter.services'])
                 }
             })
             .state('snd.chat-single', {
-                url: '/chat-single',
+                url: '/chat-single:postId',
                 views: {
                     'snd': {
                         templateUrl: 'snd-chat-single.html',
@@ -266,29 +266,39 @@ angular.module('starter', ['ionic', 'starter.services'])
 
     })
     .controller('SndHomePageController', function($scope, $ionicSideMenuDelegate) {})
-    .controller('SndChatPageController', function($scope, $ionicSideMenuDelegate, IssuePostService) {
+    .controller('SndChatPageController', function($scope, $ionicSideMenuDelegate, IssuePostService,$state) {
 
 
         $scope.hasmore = true;
         var currentPage=1
 
-        IssuePostService.fetchIssuePosts(1).then(function(data) {
+
+        /*IssuePostService.fetchIssuePosts(1).then(function(data) {
 
             if (data != '404') {
                 
                 $scope.posts = data
+                IssuePostService.setPosts(data)
+                console.log(data)
                 run=false
 
             } else {
                 console.log(data)
             }
 
-        })
+        })*/
+
+        $scope.view=function(n){
+                
+                $state.go("snd.chat-single",{postId:n});
+                
+            }
 
         $scope.doRefresh = function() {
     
             IssuePostService.fetchIssuePosts(1).then(function(data) {
                     $scope.posts = data
+                    IssuePostService.setPosts(data)
                     run=false
                     console.log(run)
                 })
@@ -305,6 +315,7 @@ angular.module('starter', ['ionic', 'starter.services'])
                 IssuePostService.fetchIssuePosts(next).then(function(data) {
                         run=false
                         $scope.posts = $scope.posts.concat(data);
+                        IssuePostService.setPosts($scope.posts)
                         if (data == null || data.length == 0) {
                             console.log("结束");
                             $scope.hasmore = false;
@@ -323,11 +334,14 @@ angular.module('starter', ['ionic', 'starter.services'])
             }
             $scope.$broadcast('scroll.infiniteScrollComplete');
         };
+
+        $scope.doRefresh()
     })
-    .controller('SndChatSinglePageController', function($scope, $ionicSideMenuDelegate, $rootScope) {
+    .controller('SndChatSinglePageController', function($scope, $ionicSideMenuDelegate, $rootScope,$stateParams,IssuePostService) {
 
         $scope.navfloat = true
-        console.log($scope.navfloat)
+         console.log(IssuePostService.getPosts())
+        $scope.post= IssuePostService.getPosts()[$stateParams.postId]
         $scope.$on('$ionicView.enter', function() {
             $ionicSideMenuDelegate.canDragContent(false);
         });

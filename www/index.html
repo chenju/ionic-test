@@ -172,7 +172,7 @@
                 <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
                 </ion-refresher>
                 <div class="list">
-                    <a class="item item-avatar" href="#/snd/chat-single" nav-transition="ios" ng-repeat="item in posts">
+                    <a class="item item-avatar" ng-click="view($index)" nav-transition="ios" ng-repeat="item in posts">
                         <img ng-src="{{item.face}}" />
                         <h2>{{item.title}}</h2>
                         <p>{{item.pubDate}}</p>
@@ -188,16 +188,11 @@
                 <div class="list card">
                     <div class="item item-avatar">
                         <img src="http://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Zachary_Quinto_2011.jpg/200px-Zachary_Quinto_2011.jpg">
-                        <h2>Oliver Thredson</h2>
+                        <h2>{{post.title}}</h2>
                         <p>I'm a psychiatrist at Briarcliff Institute</p>
                     </div>
                     <div class="item item-body">
-                        <p>
-                            Unlike most of the staff at Briarcliff, Dr Thredson was stoically calm and clinical around patients at the beginning of the series. He also had a less barbaric outlook towards treatment, saying that more compassion would greatly improve conditions for the patients. He was willing to look at the patients as more than just insane criminals in comparison to the sadistic treatment of Sister Jude. However, in his alter ego as "Bloody Face", he reverted to his darker side - an unhinged, sadistic murderer with deep-seated maternal abandonment issues.
-                        </p>
-                        <p>
-                            <a ui-sref="snd.home" class="subdued">1 Like</a>
-                        </p>
+                        {{post.description}}
                     </div>
                     <div class="item tabs tabs-secondary tabs-icon-left">
                         <a class="tab-item" href="#">

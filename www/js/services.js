@@ -4,8 +4,15 @@ angular.module('starter.services', [])
     // Might use a resource here that returns a JSON array
     var issuePosts = {};
     //var restUrl = 'http://lumen.app/issues';
-    var restUrl = 'http://lumen.app/posts';
+    var restUrl = 'rss_api/posts';
     return {
+
+        getPosts:function(){
+            return issuePosts
+        },
+        setPosts:function(data){
+            issuePosts=data
+        },
 
         fetchIssuePosts: function(pageId) {
             var self = this;
@@ -22,10 +29,10 @@ angular.module('starter.services', [])
             if(!run){
             $http(req).success(function(response) {
                 run=false
+                console.log(response)
                 return deferred.resolve(response)
             }).error(
                 function(data) {
-                    console.log(data)
                     return deferred.resolve('404')
                 }
             )
